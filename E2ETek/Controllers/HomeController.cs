@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using E2ETek.ViewModels;
 
 namespace E2ETek.Controllers
 {
@@ -12,8 +13,17 @@ namespace E2ETek.Controllers
         
         public ActionResult Index()
         {
+            var defectObjs = new List<DefectView>();
             var defects = new Defect().GetDefects();
-            return View(defects);
+            defects.ForEach(d => defectObjs.Add(new DefectView()
+            {
+                DefectId = d.DefectId,
+                Customer = "xx",
+                Priority = "s",
+                CreatedDate = "ss",
+                description=d.description
+            }));
+            return View(defectObjs);
         }
 
         public ActionResult AddUpdateDefect(string defect)

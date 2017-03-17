@@ -184,6 +184,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Defect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\DefectView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
