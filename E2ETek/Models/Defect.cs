@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -47,6 +48,10 @@ namespace E2ETek
             try
             {
                 DBEntity.Defects.Attach(defect);
+                DBEntity.Entry(defect).Property(a => a.CustomerID).IsModified = true;
+                DBEntity.Entry(defect).Property(a => a.Priority).IsModified = true;
+                DBEntity.Entry(defect).Property(a => a.CreatedDate).IsModified = true;
+                DBEntity.Entry(defect).Property(a => a.description).IsModified = true;
                 DBEntity.SaveChanges();
             }
             catch(Exception ex)
@@ -61,6 +66,9 @@ namespace E2ETek
             try
             {
                 var defect = new Defect() { DefectId = defectID };
+                var entry = DBEntity.Entry(defect);
+                if (entry.State == EntityState.Detached)
+                    DBEntity.Defects.Attach(defect);
                 DBEntity.Defects.Remove(defect);
                 DBEntity.SaveChanges();
             }

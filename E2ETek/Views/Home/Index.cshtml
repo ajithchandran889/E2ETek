@@ -1,31 +1,127 @@
-﻿@model IEnumerable<E2ETek.ViewModels.DefectView>
+﻿@*@model IEnumerable<E2ETek.ViewModels.DefectView>*@
+@model dynamic
 @{
     Layout = "~/Views/Shared/_LayoutPage.cshtml";
 }
 
 
-<div id="divDefectsList">
-    <table class="table">
+<div id="divDefectsList" style="width: 97%; margin-left: 18px;">
+  
+    <div class="row">
+        <div class="col-sm-3" style="height: 85px;">
+            <div class="form-group">
+                <label for="sel1">Filter By:</label>
+                <select class="form-control" id="selFilterBy">
+                    <option value="1">Customer</option>
+                    <option value="2">Priority</option>
+                    <option value="3">Reported Date</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-6" style="height: 85px;">
+            <div class="form-group" id="divCustomer">
+                <label for="usr">Customer Name:</label>
+                <input type="text" class="form-control" id="txtCustName" style="width: 50%;">
+            </div>
+            <div class="form-group" id="divPriority"  style="display:none">
+                <label for="selPriority">Priority</label>
+                <select class="form-control" id="selPriority"  style="width: 50%;">
+                    <option value="0">--select--</option>
+                    <option value="1">High</option>
+                    <option value="2">Medium</option>
+                    <option value="3">Low</option>
+                </select>
+            </div>
+            <div id="divDateRange" style="display:none">
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="usr">Start Date</label>
+                        <input type="text" class="form-control" id="txtStartDate">
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="usr">End Date</label>
+                        <input type="text" class="form-control" id="txtEndDate">
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-sm-2 text-center" style="margin-top: 15px;display: table-cell;vertical-align: middle;">
+            <button id="btnAddDefect" type="button" class="btn btn-primary btn-lg">Add Defect</button>
+        </div>
+    </div>
+    <table class="table" id="tableDefects">
         <thead>
             <tr>
                 <th>Customer</th>
                 <th>Priority</th>
                 <th>Reported Date</th>
                 <th>Notes</th>
-                <th>Action</th>
+                <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-        @foreach (var item in Model)
+        <tbody id="tbleBodyDefects">
+        @foreach (var item in Model.Defects)
         {
-            <tr>
-                <th scope="row">@item.Customer</th>
+            <tr data-defectID="@item.DefectId">
+                <td scope="row">@item.Customer</td>
                 <td>@item.Priority</td>
                 <td>@item.CreatedDate</td>
                 <td>@item.description</td>
-                <td></td>
+                <td>
+                    <img  src="~/Content/images/edit.png" class="imgAction editDefect" data-defectID="@item.DefectId"/>
+                    <img  src="~/Content/images/delete.png" class="imgAction imgIconDelete deleteDefect" data-defectID="@item.DefectId" />
+                </td>
             </tr>
         }
         </tbody>
     </table>
 </div>
+<div id="dialog" title="Add Defect" style="display:none">
+    <form id="defectForm">
+        <input type="hidden" id="hiddenAddEditDiffectID" value="0" />
+        <div class="form-group">
+            <label for="inpCustomer">Customer:</label>
+            <select class="form-control" id="inpCustomer" name="inpCustomer">
+                <option value="">--select customer--</option>
+                @foreach (var item in Model.Customers)
+                {
+                    <option value="@item.CustomerID">@item.CustomerName</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="inpPriority">Priority:</label>
+            <select class="form-control" id="inpPriority" name="inpPriority">
+                <option value="">--select priority--</option>
+                <option value="1">High</option>
+                <option value="2">Medium</option>
+                <option value="3">Low</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="txtReportedDate">Ref Date:</label>
+            <input type="text" class="form-control" id="txtReportedDate" name="txtReportedDate">
+        </div>
+        <div class="form-group">
+            <label for="txtdescription">Description</label>
+            <textarea class="form-control" rows="3" id="txtdescription" name="txtdescription"></textarea>
+        </div>
+        <div class="text-center">
+            <button id="btnCloseDefectPopup" type="button" class="btn btn-default">Close</button>
+            <button id="btnAddEditDefect" type="button" class="btn btn-default">Save</button>
+        </div>
+    </form>
+</div>
+<div id="dialogConfirmDelete" title="Confirm Delete" style="display:none">
+    <div class="text-center" style="margin-top: 10px;">
+        Are you sure?
+    </div>
+    <div class="text-center" style="margin-top: 45px;">
+        <input type="hidden" id="hiddenDiffectID" value="0"/>
+        <button id="btnCancelDelete" type="button" class="btn btn-default">No</button>
+        <button id="btnYesDelete" type="button" class="btn btn-default">Yes</button>
+    </div>
+    </div>

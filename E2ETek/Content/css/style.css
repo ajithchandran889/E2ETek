@@ -15,3 +15,15 @@
 .container .text-muted {
   margin: 20px 0;
 }
+
+.imgAction{
+    width: 22px;
+    cursor: pointer;
+}
+.imgIconDelete{
+    margin-left: 5px;
+}
+.error
+{
+    color:red;
+}
